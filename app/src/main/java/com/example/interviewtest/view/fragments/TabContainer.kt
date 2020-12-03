@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import com.example.interviewtest.R
 import com.example.interviewtest.utils.adapter.viewPagerAdapter.ViewPagerAdapter
 import com.example.interviewtest.databinding.FragmentTabContainerBinding
-import com.example.interviewtest.utils.objects.Constants.tab1
-import com.example.interviewtest.utils.objects.Constants.tab2
+import com.example.interviewtest.utils.Constants.tab1
+import com.example.interviewtest.utils.Constants.tab2
 import com.google.android.material.tabs.TabLayout.GRAVITY_FILL
 import com.google.android.material.tabs.TabLayout.MODE_FIXED
 import com.google.android.material.tabs.TabLayoutMediator

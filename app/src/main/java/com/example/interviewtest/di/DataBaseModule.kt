@@ -3,11 +3,10 @@ package com.example.interviewtest.di
 import android.content.Context
 import androidx.room.Room
 import com.example.interviewtest.db.PostDataBase
-import com.example.interviewtest.utils.objects.Constants.DATABASE_NAME
+import com.example.interviewtest.utils.Constants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
@@ -27,6 +26,6 @@ object DataBaseModule {
     fun providePostDao(
         database: PostDataBase
     ) = database.getPostDao()
-    
+
 
 }

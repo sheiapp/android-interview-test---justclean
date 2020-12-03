@@ -1,4 +1,4 @@
-package com.example.interviewtest.utils.adapter.recyclerViewAdapter.Favorite
+package com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

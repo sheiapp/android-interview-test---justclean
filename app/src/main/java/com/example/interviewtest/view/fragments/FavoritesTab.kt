@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.interviewtest.R
 import com.example.interviewtest.databinding.FragmentFavoritesTabBinding
-import com.example.interviewtest.utils.adapter.recyclerViewAdapter.Favorite.ListAdapterForFavoritePost
+import com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite.ListAdapterForFavoritePost
 import com.example.interviewtest.viewModel.MainViewModel
 
 

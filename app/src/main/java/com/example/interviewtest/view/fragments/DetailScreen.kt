@@ -5,33 +5,37 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.interviewtest.R
 import com.example.interviewtest.databinding.FragmentDetailScreenBinding
-import com.example.interviewtest.utils.objects.Constants.argKey
 import com.example.interviewtest.utils.adapter.recyclerViewAdapter.comment.ListAdapterForComment
+import com.example.interviewtest.utils.extensions.Status
+import com.example.interviewtest.utils.Constants.argKey
 import com.example.interviewtest.viewModel.MainViewModel
+import com.example.interviewtest.worker.MainWorker
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
+
     @Inject
     lateinit var glideRequestManager: RequestManager
-    private val factory by lazy {
-        DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-    }
+    @Inject
+    lateinit var mWorkManager: WorkManager
     private var _binding: FragmentDetailScreenBinding? = null
     private val binding get() = _binding!!
     private val mAdapter: ListAdapterForComment by lazy {
-        ListAdapterForComment(
-            glideRequestManager,
-            factory
-        )
+        ListAdapterForComment(glideRequestManager)
     }
     private val viewModel by activityViewModels<MainViewModel>()
     private var postID: Int? = null
+
+
     override fun onDestroyView() {
         mAdapter.submitList(null)
         _binding = null
@@ -43,9 +47,27 @@ class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
         _binding = FragmentDetailScreenBinding.bind(view)
         postID = arguments?.getInt(argKey)
         setupRecyclerView()
+        observeWorkRequest()
         observeCommentResponse()
         setOnClickAction()
-        observeMessages()
+
+    }
+
+    private fun observeWorkRequest() {
+        viewModel.shouldScheduleWork.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let {
+                scheduleWork()
+            }
+        }
+    }
+
+    private fun scheduleWork() {
+        val workConstraints =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val workRequest =
+            OneTimeWorkRequestBuilder<MainWorker>().setConstraints(workConstraints).build()
+        //val workStatus = mWorkManager.getWorkInfoByIdLiveData(workRequest.id)
+        mWorkManager.enqueue(workRequest)
     }
 
 
@@ -64,6 +86,7 @@ class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
         }
     }
 
+
     private fun addToFavorite() {
         if (postID != null) {
             viewModel.checkTheFavoritePostAlreadyExist(postID!!)
@@ -77,17 +100,19 @@ class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
 
     private fun observeCommentResponse() {
         if (postID != null) {
-            showProgressBar()
             viewModel.getCommentsFromAPI(postID!!).observe(viewLifecycleOwner) {
-                hideProgressBar()
-                mAdapter.submitList(it)
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        mAdapter.submitList(it.data)
+                    }
+                    Status.LOADING -> {
+                        showProgressBar()
+                    }
+                    else -> {
+                        hideProgressBar()
+                    }
+                }
             }
-        }
-    }
-
-    private fun observeMessages() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            hideProgressBar()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.interviewtest.utils.objects
+package com.example.interviewtest.utils
 
 import android.util.Log
 import com.example.interviewtest.utils.extensions.ApiExceptions
@@ -31,6 +31,8 @@ object Coroutines {
                     exception("Something went wrong.")
                     return@launch
                 }
+                Log.d("exception", e.toString())
+                exception(e.message)
             }
         }
 }

@@ -1,7 +1,6 @@
 package com.example.interviewtest.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -9,16 +8,16 @@ import androidx.navigation.fragment.findNavController
 import com.example.interviewtest.R
 import com.example.interviewtest.databinding.FragmentPostTabBinding
 import com.example.interviewtest.utils.adapter.recyclerViewAdapter.post.ListAdapterForPost
+import com.example.interviewtest.utils.extensions.Status
 import com.example.interviewtest.viewModel.MainViewModel
 
 
 class PostTab : Fragment(R.layout.fragment_post_tab) {
-    private val TAG = this.javaClass.simpleName
     private var _binding: FragmentPostTabBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<MainViewModel>()
     private val mAdapter: ListAdapterForPost by lazy {
-        ListAdapterForPost() { id ->
+        ListAdapterForPost { id ->
             handleClickEventOnPostItem(
                 id
             )
@@ -38,7 +37,6 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
         setupPostRecyclerView()
         checkDataAvailabilityInDataBase()
         observePostResponse()
-        observeMessages()
     }
 
     private fun checkDataAvailabilityInDataBase() {
@@ -54,13 +52,17 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
     }
 
     private fun observePostResponse() {
-        showProgressBar()
         viewModel.postResponseLiveData.observe(viewLifecycleOwner) { response ->
-            hideProgressBar()
-            if (!response.isNullOrEmpty()) {
-                mAdapter.submitList(response)
-            } else {
-                Log.d(TAG, "no data from api")
+            when (response.status) {
+                Status.SUCCESS -> {
+                    mAdapter.submitList(response.data)
+                }
+                Status.LOADING -> {
+                    showProgressBar()
+                }
+                else -> {
+                    hideProgressBar()
+                }
             }
         }
     }
@@ -71,11 +73,7 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
         findNavController().navigate(gotoDetailPage)
     }
 
-    private fun observeMessages() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            hideProgressBar()
-        }
-    }
+
 
     private fun showProgressBar() {
         binding.progressBar.visibility = View.VISIBLE

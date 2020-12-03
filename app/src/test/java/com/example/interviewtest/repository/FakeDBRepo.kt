@@ -11,7 +11,6 @@ class FakeDBRepo : DBRepository {
 
     override suspend fun addALLPostDataToPostEntity(postEntity: List<PostEntity>) {
         posts.addAll(postEntity)
-
     }
 
     override suspend fun getAllPostDataFromPostEntity(): List<PostEntity> = posts

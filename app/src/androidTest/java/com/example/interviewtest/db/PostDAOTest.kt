@@ -49,9 +49,7 @@ class PostDAOTest {
             PostEntity(3, 3, "body3", "title3"),
             PostEntity(4, 4, "body4", "title4")
         )
-        //adding data into db
         postDAO.addALLPostDataToPostEntity(posts)
-        //getting data from db
         val getAllPosts = postDAO.getAllPostDataFromPostEntity()
         Truth.assertThat(getAllPosts).isEqualTo(posts)
     }
@@ -78,10 +76,9 @@ class PostDAOTest {
             FavoriteEntity(3, 3, "body3", "title3"),
             FavoriteEntity(4, 4, "body4", "title4")
         )
-        //adding data into db
         for (i in favorites.indices)
             postDAO.addPostDataToFavoriteEntity(favoriteEntity = favorites[i])
-        //getting data from db
+
         val getAllFavoritePosts = postDAO.getAllFavoriteDataFromFavoriteEntity()
         Truth.assertThat(getAllFavoritePosts).isEqualTo(favorites)
     }
@@ -94,10 +91,8 @@ class PostDAOTest {
             FavoriteEntity(3, 3, "body3", "title3"),
             FavoriteEntity(4, 4, "body4", "title4")
         )
-        //adding data into db
         for (i in favorites.indices)
             postDAO.addPostDataToFavoriteEntity(favoriteEntity = favorites[i])
-        //checking the favorite Post Exist
         val post = postDAO.checkThePostAlreadyExist(4)
         Truth.assertThat(post).isNotNull()
     }

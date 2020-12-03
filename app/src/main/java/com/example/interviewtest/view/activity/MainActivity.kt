@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.interviewtest.R
 import com.example.interviewtest.databinding.ActivityMainBinding
-import com.example.interviewtest.utils.objects.Constants.networkNotFount
+import com.example.interviewtest.utils.Constants.networkNotFount
 import com.example.interviewtest.utils.extensions.snack
 import com.example.interviewtest.viewModel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -38,8 +38,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeMessages() {
-        viewModel.message.observe(this) {
-            binding.root.snack(it.peekContent(), Snackbar.LENGTH_LONG)
+        viewModel.message.observe(this) { it ->
+            it?.getContentIfNotHandled()?.let {
+                    binding.root.snack(it, Snackbar.LENGTH_LONG)
+            }
         }
     }
 

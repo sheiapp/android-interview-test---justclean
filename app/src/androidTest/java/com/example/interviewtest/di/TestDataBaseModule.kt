@@ -1,4 +1,5 @@
 package com.example.interviewtest.di
+
 import android.content.Context
 import androidx.room.Room
 import com.example.interviewtest.db.PostDataBase
@@ -15,7 +16,7 @@ object TestDataBaseModule {
 
     @Provides
     @Named("Test_PostDataBase")
-    fun provideInMemoryDb(@ApplicationContext context:Context) =
+    fun provideInMemoryDb(@ApplicationContext context: Context) =
         Room.inMemoryDatabaseBuilder(context, PostDataBase::class.java)
             .allowMainThreadQueries()
             .build()

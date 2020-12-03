@@ -1,22 +1,19 @@
 package com.example.interviewtest.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.work.WorkManager
 import com.example.interviewtest.MainCoroutineRule
 import com.example.interviewtest.db.FavoriteEntity
 import com.example.interviewtest.getOrAwaitValueTest
 import com.example.interviewtest.repository.FakeDBRepo
 import com.example.interviewtest.repository.FakeMainRepoTest
-import com.example.interviewtest.utils.objects.Constants.postAddedAlert
-import com.example.interviewtest.utils.objects.Constants.postAlreadyExistAlert
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.junit.Before
+import com.example.interviewtest.utils.extensions.Status
+import com.example.interviewtest.utils.Constants.postAddedAlert
+import com.example.interviewtest.utils.Constants.postAlreadyExistAlert
 import com.google.common.truth.Truth.assertThat
-
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
 
 @ExperimentalCoroutinesApi
 class MainViewModelTest {
@@ -28,31 +25,48 @@ class MainViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var mainViewModel: MainViewModel
-
+    private lateinit var fakeMainRepoTest: FakeMainRepoTest
+    private lateinit var fakeDBRepo: FakeDBRepo
 
 
     @Before
     fun setUp() {
-        mainViewModel = MainViewModel(FakeMainRepoTest(), FakeDBRepo())
+        fakeMainRepoTest = FakeMainRepoTest()
+        fakeDBRepo = FakeDBRepo()
+        mainViewModel = MainViewModel(fakeMainRepoTest, fakeDBRepo)
     }
 
+    @Test
+    fun `check post data getting from api when error occurs due to network or server related issue`() {
+        fakeMainRepoTest.setShouldReturnNetworkError(true)
+        mainViewModel.getPostsFromAPI()
+        val data = mainViewModel.postResponseLiveData.getOrAwaitValueTest()
+        assertThat(data.status).isEqualTo(Status.ERROR)
+    }
 
     @Test
-    fun `check the data getting from api and update the data to db`() {
+    fun `check comments data getting from api when error occurs due to network or server related issue`() {
+        fakeMainRepoTest.setShouldReturnNetworkError(true)
+        val comment = mainViewModel.getCommentsFromAPI(2).getOrAwaitValueTest()
+        assertThat(comment.status).isEqualTo(Status.ERROR)
+    }
+
+    @Test
+    fun `check the post data getting from api and update the data to db`() {
         mainViewModel.getPostsFromAPI()
         val post = mainViewModel.postResponseLiveData.getOrAwaitValueTest()
         mainViewModel.getPostsFromDB()
         val postFromDB = mainViewModel.allPostFromDB.getOrAwaitValueTest()
         print(post)
         print(postFromDB)
-        assertThat(post).isNotEmpty()
+        assertThat(post.data).isNotEmpty()
         assertThat(postFromDB).isNotEmpty()
     }
 
     @Test
     fun `check the comment against post is getting from api`() {
         val comment = mainViewModel.getCommentsFromAPI(2).getOrAwaitValueTest()
-        assertThat(comment).isNotEmpty()
+        assertThat(comment.data).isNotEmpty()
     }
 
     @Test
@@ -89,10 +103,11 @@ class MainViewModelTest {
                 "title4"
             )
         )
+        /****/
         mainViewModel.checkTheFavoritePostAlreadyExist(2)
-        val message = mainViewModel.message.getOrAwaitValueTest()
-        assertThat(message.peekContent()).isEqualTo(postAlreadyExistAlert)
-        print(message.peekContent())
+        val message = mainViewModel.message.getOrAwaitValueTest().getContentIfNotHandled()
+        print(message)
+        assertThat(message).isEqualTo(postAlreadyExistAlert)
     }
 
     @Test

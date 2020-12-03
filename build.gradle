@@ -15,6 +15,21 @@ buildscript {
     ext.jetpackhilt_version='1.0.0-alpha02'
     ext.workmanager_version='2.4.0'
     ext.room_version = '2.2.5'
+
+    //testing
+    ext.test_core = '1.3.0'
+    ext.junit_version = '4.13.1'
+    ext.hamcrest = '1.3'
+    ext.androidx_core = '2.1.0'
+    ext.robolectric = '4.4'
+    ext.truth = '1.1'
+    ext.mockito_core = '2.28.2'
+    ext.dexmaker_mockito = '2.12.1'
+    ext.test_ext_junit = '1.1.2'
+    ext.espresso_core = '3.3.0'
+    ext.hilt_android_testing = '2.28-alpha'
+
+
     repositories {
         google()
         jcenter()

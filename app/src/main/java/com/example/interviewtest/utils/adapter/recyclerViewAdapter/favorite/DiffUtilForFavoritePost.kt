@@ -1,4 +1,4 @@
-package com.example.interviewtest.utils.adapter.recyclerViewAdapter.Favorite
+package com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.interviewtest.db.FavoriteEntity

@@ -1,4 +1,4 @@
-package com.example.interviewtest.utils.adapter.recyclerViewAdapter.Favorite
+package com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite
 
 
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.interviewtest.R
 import com.example.interviewtest.db.FavoriteEntity
-import com.example.interviewtest.db.PostEntity
 
 class ListAdapterForFavoritePost( ) :
     ListAdapter<FavoriteEntity, ViewHolderForFavoritePost>(DiffUtilForFavoritePost()) {

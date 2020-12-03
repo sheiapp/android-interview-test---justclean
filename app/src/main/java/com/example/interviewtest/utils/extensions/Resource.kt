@@ -1,4 +1,4 @@
-package com.example.interviewtest.utils
+package com.example.interviewtest.utils.extensions
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
     companion object {
