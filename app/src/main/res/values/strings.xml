@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">InterviewTest</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="previewBodyText">in non odio excepturi sint eum\nlabore voluptates vitae quia qui et\ninventore itaque rerum\nveniam non exercitationem delectus aut</string>
+    <string name="previewTitleText">quaerat velit veniam amet cupiditate aut numquam ut sequi</string>
+    <string name="previewName">officia ullam ut neque earum ipsa et fuga</string>
+    <string name="previewEmail">Lottie.Zieme@ruben.us</string>
+    <string name="page_title">Detail</string>
+    <string name="content_description_favorite">favoriteButton</string>
+</resources>
