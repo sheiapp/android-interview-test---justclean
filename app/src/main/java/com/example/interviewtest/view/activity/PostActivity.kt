@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class PostActivity : AppCompatActivity() {
     private val navHostFragment: NavHostFragment by lazy { supportFragmentManager.findFragmentById(R.id.mainNavContainer) as NavHostFragment }
     private val navController: NavController get() = navHostFragment.navController
     private var _binding: ActivityMainBinding? = null

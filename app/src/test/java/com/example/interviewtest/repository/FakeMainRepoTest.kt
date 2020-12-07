@@ -7,6 +7,8 @@ import com.example.interviewtest.model.CommentsResponseItem
 import com.example.interviewtest.utils.extensions.Resource
 
 class FakeMainRepoTest : MainRepository {
+
+    private val favorites = mutableListOf<PostEntity>()
     private val networkConnectionStatus = MutableLiveData(true)
     private val posts = mutableListOf<PostEntity>()
     private val comments = mutableListOf<CommentsResponseItem>()
@@ -19,10 +21,10 @@ class FakeMainRepoTest : MainRepository {
 
 
     init {
-        posts.add(PostEntity(1, 1, "body1", "title1"))
-        posts.add(PostEntity(2, 2, "body2", "title2"))
-        posts.add(PostEntity(3, 3, "body3", "title3"))
-        posts.add(PostEntity(4, 4, "body4", "title4"))
+        posts.add(PostEntity(1, 1, 1, "body1", "title1"))
+        posts.add(PostEntity(2, 2, 2, "body2", "title2"))
+        posts.add(PostEntity(3, 3, 3, "body3", "title3"))
+        posts.add(PostEntity(4, 4, 4, "body4", "title4"))
 
         comments.add(CommentsResponseItem("body1", "email1", 1, "name1", 1))
         comments.add(CommentsResponseItem("body2", "email2", 2, "name2", 2))
@@ -53,4 +55,24 @@ class FakeMainRepoTest : MainRepository {
     override fun getNetworkConnectionStatus(): LiveData<Boolean> {
         return networkConnectionStatus
     }
+
+    override suspend fun addALLPostDataToPostEntity(postEntity: List<PostEntity>) {
+        posts.addAll(postEntity)
+    }
+
+    override suspend fun getAllPostDataFromPostEntity(): List<PostEntity> = posts
+
+
+    override suspend fun getPostDataFromPostEntity(id: Int): PostEntity =
+        posts.find { it.id == id }!!
+
+    override suspend fun deleteAllPostWhichIsNotFavorite() {
+        posts.remove(posts.find { !it.isFavorite })
+    }
+
+
+    override suspend fun checkTheFavoritePostAlreadyExist(id: Int): PostEntity =
+        favorites.find { it.id == id }!!
+
+    override suspend fun getAllFavoriteDataFromFavoriteEntity(): List<PostEntity> = favorites
 }

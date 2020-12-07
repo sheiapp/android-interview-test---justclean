@@ -12,7 +12,7 @@ import com.example.interviewtest.utils.extensions.Status
 import com.example.interviewtest.viewModel.MainViewModel
 
 
-class PostTab : Fragment(R.layout.fragment_post_tab) {
+class PostTabFragment : Fragment(R.layout.fragment_post_tab) {
     private var _binding: FragmentPostTabBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<MainViewModel>()
@@ -53,6 +53,7 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
 
     private fun observePostResponse() {
         viewModel.postResponseLiveData.observe(viewLifecycleOwner) { response ->
+            showProgressBar()
             when (response.status) {
                 Status.SUCCESS -> {
                     mAdapter.submitList(response.data)
@@ -69,11 +70,10 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
 
 
     private fun handleClickEventOnPostItem(post_id: Int) {
-        val gotoDetailPage = TabContainerDirections.actionTabContainerToDetailScreen(post_id)
+        val gotoDetailPage =
+            TabContainerFragmentDirections.actionTabContainerToDetailScreen(post_id)
         findNavController().navigate(gotoDetailPage)
     }
-
-
 
     private fun showProgressBar() {
         binding.progressBar.visibility = View.VISIBLE
@@ -82,6 +82,5 @@ class PostTab : Fragment(R.layout.fragment_post_tab) {
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
     }
-
 
 }

@@ -19,7 +19,7 @@ object DataBaseModule {
     @Provides
     fun providePostDatabase(
         @ApplicationContext context: Context
-    ) = Room.databaseBuilder(context, PostDataBase::class.java, DATABASE_NAME).build()
+    ) = Room.databaseBuilder(context, PostDataBase::class.java, DATABASE_NAME).fallbackToDestructiveMigration().build()
 
     @Singleton
     @Provides

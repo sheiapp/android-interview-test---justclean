@@ -13,7 +13,7 @@ import com.google.android.material.tabs.TabLayout.MODE_FIXED
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class TabContainer : Fragment(R.layout.fragment_tab_container) {
+class TabContainerFragment : Fragment(R.layout.fragment_tab_container) {
     private var _binding: FragmentTabContainerBinding? = null
     private val binding get() = _binding!!
     private lateinit var mAdapter: ViewPagerAdapter

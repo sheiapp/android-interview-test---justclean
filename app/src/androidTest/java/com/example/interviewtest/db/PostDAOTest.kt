@@ -44,10 +44,10 @@ class PostDAOTest {
     @Test
     fun addALLPostDataToPostEntity_getAllPostDataFromPostEntity() = runBlockingTest {
         val posts = listOf(
-            PostEntity(1, 1, "body1", "title1"),
-            PostEntity(2, 2, "body2", "title2"),
-            PostEntity(3, 3, "body3", "title3"),
-            PostEntity(4, 4, "body4", "title4")
+            PostEntity(1,1, 1, "body1", "title1"),
+            PostEntity(2,2, 2, "body2", "title2"),
+            PostEntity(3,3, 3, "body3", "title3"),
+            PostEntity(4,4, 4, "body4", "title4")
         )
         postDAO.addALLPostDataToPostEntity(posts)
         val getAllPosts = postDAO.getAllPostDataFromPostEntity()
@@ -58,42 +58,14 @@ class PostDAOTest {
     @Test
     fun getOnePostDataFromPostEntity() = runBlockingTest {
         val posts = listOf(
-            PostEntity(1, 1, "body1", "title1"),
-            PostEntity(2, 2, "body2", "title2"),
-            PostEntity(3, 3, "body3", "title3"),
-            PostEntity(4, 4, "body4", "title4")
+            PostEntity(1,1, 1, "body1", "title1"),
+            PostEntity(2,2, 2, "body2", "title2"),
+            PostEntity(3,3, 3, "body3", "title3"),
+            PostEntity(4,4, 4, "body4", "title4")
         )
         postDAO.addALLPostDataToPostEntity(posts)
         val getOnePostEntity = postDAO.getPostDataFromPostEntity(1)
         Truth.assertThat(posts[0]).isEqualTo(getOnePostEntity)
     }
 
-    @Test
-    fun addPostDataToFavoriteEntity() = runBlockingTest {
-        val favorites = listOf(
-            FavoriteEntity(1, 1, "body1", "title1"),
-            FavoriteEntity(2, 2, "body2", "title2"),
-            FavoriteEntity(3, 3, "body3", "title3"),
-            FavoriteEntity(4, 4, "body4", "title4")
-        )
-        for (i in favorites.indices)
-            postDAO.addPostDataToFavoriteEntity(favoriteEntity = favorites[i])
-
-        val getAllFavoritePosts = postDAO.getAllFavoriteDataFromFavoriteEntity()
-        Truth.assertThat(getAllFavoritePosts).isEqualTo(favorites)
-    }
-
-    @Test
-    fun checkThePostAlreadyExist() = runBlockingTest {
-        val favorites = listOf(
-            FavoriteEntity(1, 1, "body1", "title1"),
-            FavoriteEntity(2, 2, "body2", "title2"),
-            FavoriteEntity(3, 3, "body3", "title3"),
-            FavoriteEntity(4, 4, "body4", "title4")
-        )
-        for (i in favorites.indices)
-            postDAO.addPostDataToFavoriteEntity(favoriteEntity = favorites[i])
-        val post = postDAO.checkThePostAlreadyExist(4)
-        Truth.assertThat(post).isNotNull()
-    }
 }

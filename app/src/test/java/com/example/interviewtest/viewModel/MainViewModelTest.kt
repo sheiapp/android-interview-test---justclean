@@ -2,13 +2,11 @@ package com.example.interviewtest.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.interviewtest.MainCoroutineRule
-import com.example.interviewtest.db.FavoriteEntity
+import com.example.interviewtest.db.PostEntity
 import com.example.interviewtest.getOrAwaitValueTest
-import com.example.interviewtest.repository.FakeDBRepo
 import com.example.interviewtest.repository.FakeMainRepoTest
-import com.example.interviewtest.utils.extensions.Status
 import com.example.interviewtest.utils.Constants.postAddedAlert
-import com.example.interviewtest.utils.Constants.postAlreadyExistAlert
+import com.example.interviewtest.utils.extensions.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -26,15 +24,14 @@ class MainViewModelTest {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var fakeMainRepoTest: FakeMainRepoTest
-    private lateinit var fakeDBRepo: FakeDBRepo
 
 
     @Before
     fun setUp() {
         fakeMainRepoTest = FakeMainRepoTest()
-        fakeDBRepo = FakeDBRepo()
-        mainViewModel = MainViewModel(fakeMainRepoTest, fakeDBRepo)
+        mainViewModel = MainViewModel(fakeMainRepoTest)
     }
+
 
     @Test
     fun `check post data getting from api when error occurs due to network or server related issue`() {
@@ -69,51 +66,12 @@ class MainViewModelTest {
         assertThat(comment.data).isNotEmpty()
     }
 
-    @Test
-    fun `check if the post already in favorite db then should getting alert message`() {
-        mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
-                1,
-                1,
-                "body1",
-                "title1"
-            )
-        )
-        mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
-                2,
-                2,
-                "body2",
-                "title2"
-            )
-        )
-        mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
-                3,
-                3,
-                "body3",
-                "title3"
-            )
-        )
-        mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
-                4,
-                4,
-                "body4",
-                "title4"
-            )
-        )
-        /****/
-        mainViewModel.checkTheFavoritePostAlreadyExist(2)
-        val message = mainViewModel.message.getOrAwaitValueTest().getContentIfNotHandled()
-        print(message)
-        assertThat(message).isEqualTo(postAlreadyExistAlert)
-    }
 
     @Test
     fun `check if the post not already in favorite db then should allow to add`() {
         mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
+            PostEntity(
+                1,
                 1,
                 1,
                 "body1",
@@ -121,7 +79,8 @@ class MainViewModelTest {
             )
         )
         mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
+            PostEntity(
+                3,
                 3,
                 3,
                 "body3",
@@ -129,7 +88,8 @@ class MainViewModelTest {
             )
         )
         mainViewModel.addPostDataToFavoriteEntityAndInformMiddleWare(
-            FavoriteEntity(
+            PostEntity(
+                4,
                 4,
                 4,
                 "body4",

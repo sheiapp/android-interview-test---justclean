@@ -2,8 +2,8 @@ package com.example.interviewtest.utils.adapter.viewPagerAdapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.interviewtest.view.fragments.FavoritesTab
-import com.example.interviewtest.view.fragments.PostTab
+import com.example.interviewtest.view.fragments.FavoritesTabFragment
+import com.example.interviewtest.view.fragments.PostTabFragment
 
 class ViewPagerAdapter(f: Fragment, ) : FragmentStateAdapter(f) {
 
@@ -13,10 +13,10 @@ class ViewPagerAdapter(f: Fragment, ) : FragmentStateAdapter(f) {
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0-> PostTab()
-            1-> FavoritesTab()
+            0-> PostTabFragment()
+            1-> FavoritesTabFragment()
             else->
-                PostTab()
+                PostTabFragment()
         }
     }
 }

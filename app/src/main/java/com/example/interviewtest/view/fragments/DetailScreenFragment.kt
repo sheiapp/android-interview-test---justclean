@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
+class DetailScreenFragment : Fragment(R.layout.fragment_detail_screen) {
 
     @Inject
     lateinit var glideRequestManager: RequestManager
@@ -100,6 +100,7 @@ class DetailScreen : Fragment(R.layout.fragment_detail_screen) {
 
     private fun observeCommentResponse() {
         if (postID != null) {
+            showProgressBar()
             viewModel.getCommentsFromAPI(postID!!).observe(viewLifecycleOwner) {
                 when (it.status) {
                     Status.SUCCESS -> {

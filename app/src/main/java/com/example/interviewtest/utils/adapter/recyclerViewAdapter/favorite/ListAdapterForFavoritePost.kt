@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.interviewtest.R
-import com.example.interviewtest.db.FavoriteEntity
+import com.example.interviewtest.db.PostEntity
 
 class ListAdapterForFavoritePost( ) :
-    ListAdapter<FavoriteEntity, ViewHolderForFavoritePost>(DiffUtilForFavoritePost()) {
+    ListAdapter<PostEntity, ViewHolderForFavoritePost>(DiffUtilForPost()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderForFavoritePost {
         return ViewHolderForFavoritePost(
             itemView = LayoutInflater.from(parent.context).inflate(

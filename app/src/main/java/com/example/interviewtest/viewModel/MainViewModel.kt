@@ -6,10 +6,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.interviewtest.db.FavoriteEntity
 import com.example.interviewtest.db.PostEntity
 import com.example.interviewtest.model.CommentsResponseItem
-import com.example.interviewtest.repository.DBRepository
 import com.example.interviewtest.repository.MainRepository
 import com.example.interviewtest.utils.Event
 import com.example.interviewtest.utils.extensions.Resource
@@ -17,11 +15,11 @@ import com.example.interviewtest.utils.extensions.Status
 import com.example.interviewtest.utils.Constants.postAddedAlert
 import com.example.interviewtest.utils.Constants.postAlreadyExistAlert
 import com.example.interviewtest.utils.Coroutines
+import com.example.interviewtest.utils.extensions.setupFavoriteEntity
 import kotlinx.coroutines.Job
 
 class MainViewModel @ViewModelInject constructor(
-    private val mainRepo: MainRepository,
-    private val dbRepo: DBRepository
+    private val mainRepo: MainRepository
 ) : ViewModel() {
     private val TAG = this.javaClass.simpleName
     private lateinit var getPostsJob: Job
@@ -36,9 +34,9 @@ class MainViewModel @ViewModelInject constructor(
     private val _message = MutableLiveData<Event<String>>()
     private val _shouldScheduleWork: MutableLiveData<Event<Boolean>> = MutableLiveData()
     private val _allPostFromDB = MutableLiveData<List<PostEntity>>()
-    private val _allFavoritePostFromDB = MutableLiveData<List<FavoriteEntity>>()
+    private val _allFavoritePostFromDB = MutableLiveData<List<PostEntity>>()
     val shouldScheduleWork: MutableLiveData<Event<Boolean>> get() = _shouldScheduleWork
-    val allFavoritePostFromDB: LiveData<List<FavoriteEntity>> get() = _allFavoritePostFromDB
+    val allFavoritePostFromDB: LiveData<List<PostEntity>> get() = _allFavoritePostFromDB
     val postResponseLiveData: LiveData<Resource<List<PostEntity>>> get() = postsMutableData
     val message: LiveData<Event<String>> get() = _message
     val allPostFromDB get() = _allPostFromDB
@@ -66,7 +64,7 @@ class MainViewModel @ViewModelInject constructor(
             }, {
                 postsMutableData.value = it
                 if (it?.data != null && it.status == Status.SUCCESS) {
-                    addAllPostToDB(it.data)
+                    deleteAllPostWhichIsNotFavorite(it.data)
                 } else {
                     setMessage(it?.message)
                 }
@@ -74,6 +72,16 @@ class MainViewModel @ViewModelInject constructor(
                 setMessage(it)
             })
 
+    }
+
+    private fun deleteAllPostWhichIsNotFavorite(data: List<PostEntity>) {
+        Coroutines.ioThenMain({
+            mainRepo.deleteAllPostWhichIsNotFavorite()
+        }, {
+            addAllPostToDB(data)
+        }, {
+            setMessage(it)
+        })
     }
 
     fun getCommentsFromAPI(post_id: Int): LiveData<Resource<List<CommentsResponseItem>>> {
@@ -96,7 +104,7 @@ class MainViewModel @ViewModelInject constructor(
     fun getPostsFromDB() {
         getAllPostDataFromDBJob = Coroutines.ioThenMain(
             {
-                dbRepo.getAllPostDataFromPostEntity()
+                mainRepo.getAllPostDataFromPostEntity()
             }, {
                 _allPostFromDB.value = it
             }, {
@@ -107,7 +115,7 @@ class MainViewModel @ViewModelInject constructor(
 
     private fun addAllPostToDB(postEntityList: List<PostEntity>) {
         addPostDataToDBJob = Coroutines.ioThenMain({
-            dbRepo.addALLPostDataToPostEntity(postEntityList)
+            mainRepo.addALLPostDataToPostEntity(postEntityList)
         }, {
             Log.d(TAG, "addPostData_completed")
         }, {
@@ -116,13 +124,13 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     @VisibleForTesting
-    internal fun addPostDataToFavoriteEntityAndInformMiddleWare(favoriteEntity: FavoriteEntity) {
+    internal fun addPostDataToFavoriteEntityAndInformMiddleWare(postEntity: PostEntity) {
         if (!networkStatus.value!!) {
             //  scheduleWork()
             _shouldScheduleWork.value = Event(true)
         }
         addPostDataToFavoriteEntityJob = Coroutines.ioThenMain({
-            dbRepo.addPostDataToFavoriteEntity(favoriteEntity)
+            mainRepo.addALLPostDataToPostEntity(postEntity.setupFavoriteEntity())
         }, {
             setMessage(postAddedAlert)
         }, {
@@ -133,7 +141,7 @@ class MainViewModel @ViewModelInject constructor(
     fun checkTheFavoritePostAlreadyExist(id: Int) {
         checkThePostAlreadyExistJob = Coroutines.ioThenMain(
             {
-                dbRepo.checkTheFavoritePostAlreadyExist(id)
+                mainRepo.checkTheFavoritePostAlreadyExist(id)
             }, {
                 if (it == null) {
                     getPostDataFromPostEntity(id)
@@ -149,17 +157,10 @@ class MainViewModel @ViewModelInject constructor(
     private fun getPostDataFromPostEntity(id: Int) {
         getPostDataFroPostEntityJob = Coroutines.ioThenMain(
             {
-                dbRepo.getPostDataFromPostEntity(id)
+                mainRepo.getPostDataFromPostEntity(id)
             }, {
                 if (it != null) {
-                    addPostDataToFavoriteEntityAndInformMiddleWare(
-                        FavoriteEntity(
-                            id = it.id,
-                            userId = it.userId,
-                            body = it.body,
-                            title = it.title
-                        )
-                    )
+                    addPostDataToFavoriteEntityAndInformMiddleWare(it)
                 }
             }, {
                 setMessage(it)
@@ -169,7 +170,7 @@ class MainViewModel @ViewModelInject constructor(
 
     fun getAllFavoriteDataFromFavoriteEntity() {
         getAllFavoriteDataFromFavoriteEntityJob = Coroutines.ioThenMain({
-            dbRepo.getAllFavoriteDataFromFavoriteEntity()
+            mainRepo.getAllFavoriteDataFromFavoriteEntity()
         }, {
             _allFavoritePostFromDB.value = it
         }, {

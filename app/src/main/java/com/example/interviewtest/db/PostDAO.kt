@@ -10,19 +10,18 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addALLPostDataToPostEntity(postEntity: List<PostEntity>)
 
-    @Query("SELECT * FROM post_table")
-    suspend fun getAllPostDataFromPostEntity(): List<PostEntity>
+    @Query("SELECT * FROM post_table WHERE isFavorite = :isFavorite")
+    suspend fun getAllPostDataFromPostEntity(isFavorite: Boolean = false): List<PostEntity>
 
-    @Query("SELECT * FROM post_table WHERE id = :id")
-    suspend fun getPostDataFromPostEntity(id: Int): PostEntity
+    @Query("SELECT * FROM post_table WHERE id = :id AND isFavorite = :isFavorite")
+    suspend fun getPostDataFromPostEntity(id: Int, isFavorite: Boolean = false): PostEntity
 
+    @Query("SELECT * FROM post_table WHERE id = :id AND isFavorite = :isFavorite")
+    suspend fun checkThePostAlreadyExist(id: Int, isFavorite: Boolean = true): PostEntity
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addPostDataToFavoriteEntity(favoriteEntity: FavoriteEntity)
+    @Query("SELECT * FROM post_table WHERE isFavorite = :isFavorite")
+    suspend fun getAllFavoriteDataFromFavoriteEntity(isFavorite: Boolean = true): List<PostEntity>
 
-    @Query("SELECT * FROM favorite_table WHERE id = :id")
-    suspend fun checkThePostAlreadyExist(id: Int): FavoriteEntity
-
-    @Query("SELECT * FROM favorite_table")
-    suspend fun getAllFavoriteDataFromFavoriteEntity(): List<FavoriteEntity>
+    @Query("DELETE  FROM post_table WHERE isFavorite = :isFavorite")
+    suspend fun deleteAllPostWhichIsNotFavorite(isFavorite: Boolean = false)
 }

@@ -10,7 +10,7 @@ import com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite.List
 import com.example.interviewtest.viewModel.MainViewModel
 
 
-class FavoritesTab : Fragment(R.layout.fragment_favorites_tab) {
+class FavoritesTabFragment : Fragment(R.layout.fragment_favorites_tab) {
     private var _binding: FragmentFavoritesTabBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<MainViewModel>()
