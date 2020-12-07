@@ -105,6 +105,7 @@ class DetailScreenFragment : Fragment(R.layout.fragment_detail_screen) {
                 when (it.status) {
                     Status.SUCCESS -> {
                         mAdapter.submitList(it.data)
+                        hideProgressBar()
                     }
                     Status.LOADING -> {
                         showProgressBar()

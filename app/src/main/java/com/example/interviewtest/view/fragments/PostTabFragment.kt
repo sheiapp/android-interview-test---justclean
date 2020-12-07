@@ -57,6 +57,7 @@ class PostTabFragment : Fragment(R.layout.fragment_post_tab) {
             when (response.status) {
                 Status.SUCCESS -> {
                     mAdapter.submitList(response.data)
+                    hideProgressBar()
                 }
                 Status.LOADING -> {
                     showProgressBar()
