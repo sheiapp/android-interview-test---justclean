@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.interviewtest.R
 import com.example.interviewtest.db.PostEntity
+import com.example.interviewtest.utils.adapter.recyclerViewAdapter.DiffUtilForCommon
 
 class ListAdapterForFavoritePost( ) :
-    ListAdapter<PostEntity, ViewHolderForFavoritePost>(DiffUtilForPost()) {
+    ListAdapter<PostEntity, ViewHolderForFavoritePost>(DiffUtilForCommon()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderForFavoritePost {
         return ViewHolderForFavoritePost(
             itemView = LayoutInflater.from(parent.context).inflate(

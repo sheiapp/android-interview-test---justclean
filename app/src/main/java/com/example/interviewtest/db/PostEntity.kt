@@ -9,7 +9,7 @@ data class PostEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "no")
-    val no:Int,
+    val no: Int,
     @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "userId")
@@ -19,5 +19,31 @@ data class PostEntity(
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "isFavorite")
-    var isFavorite: Boolean=false
-)
+    var isFavorite: Boolean = false
+) {
+    override fun equals(other: Any?): Boolean {
+        if (javaClass != other?.javaClass) {
+            return false
+        }
+        other as PostEntity
+        if (no != other.no) {
+            return false
+        }
+        if (id != other.id) {
+            return false
+        }
+        if (userId != other.userId) {
+            return false
+        }
+        if (body != other.body) {
+            return false
+        }
+        if (title != other.title) {
+            return false
+        }
+        if (isFavorite != other.isFavorite) {
+            return false
+        }
+        return true
+    }
+}

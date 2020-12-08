@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.interviewtest.R
 import com.example.interviewtest.db.PostEntity
-import com.example.interviewtest.utils.adapter.recyclerViewAdapter.favorite.DiffUtilForPost
+import com.example.interviewtest.utils.adapter.recyclerViewAdapter.DiffUtilForCommon
 
 class ListAdapterForPost(private val clickEventData:(Int) ->Unit ) :
-    ListAdapter<PostEntity, ViewHolderForPost>(DiffUtilForPost()) {
+    ListAdapter<PostEntity, ViewHolderForPost>(DiffUtilForCommon()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderForPost {
         return ViewHolderForPost(
             itemView = LayoutInflater.from(parent.context).inflate(
